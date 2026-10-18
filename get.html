@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6246FF">
+<title>Get Poof</title>
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF0F8;--surface:#fff;--surface2:#E3E6F3;--ink:#161830;--ink2:#5A5F84;--line:#D5D9EC;--violet:#6246FF;color-scheme:light;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#0F1020;--surface:#181A30;--surface2:#242748;--ink:#EEF0FF;--ink2:#9A9FC8;--line:#2C3058;--violet:#7A62FF;color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+main{max-width:480px;margin:0 auto;padding:32px 22px 48px}
+h1,h2{font-family:'Bricolage Grotesque','DM Sans',system-ui,sans-serif;margin:0}
+.logo{font-weight:800;font-size:64px;letter-spacing:-.045em;line-height:1;-webkit-mask-image:linear-gradient(90deg,#000 58%,rgba(0,0,0,.28));mask-image:linear-gradient(90deg,#000 58%,rgba(0,0,0,.28))}
+.lede{font-size:19px;color:var(--ink2);margin:10px 0 26px}
+.btn{display:flex;align-items:center;justify-content:center;height:54px;border-radius:27px;background:var(--violet);color:#fff;font-weight:700;font-size:17px;text-decoration:none;text-align:center}
+.btn.ghost{background:var(--surface2);color:var(--ink);margin-top:10px}
+h2{font-size:22px;letter-spacing:-.02em;margin:34px 0 12px}
+ol{margin:0;padding:0;list-style:none;counter-reset:s}
+li{counter-increment:s;display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+li::before{content:counter(s);flex:none;width:30px;height:30px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-weight:700;font-size:14px}
+li span{display:block;color:var(--ink2);font-size:14.5px}
+.note{background:var(--surface);box-shadow:0 0 0 1px var(--line);border-radius:18px;padding:16px;margin-top:22px;color:var(--ink2);font-size:14.5px}
+.note b{color:var(--ink)}
+</style>
+</head>
+<body>
+<main>
+  <div class="logo">poof</div>
+  <p class="lede">Chat that cleans up after itself, with calls that ring like real calls.</p>
+  <a class="btn" href="https://github.com/stormdragon171-spec/poof-android/releases/latest/download/poof.apk">Download for Android</a>
+  <a class="btn ghost" href="./">Use Poof in the browser</a>
+
+  <h2>Install in 4 steps</h2>
+  <ol>
+    <li><div>Tap <b>Download for Android</b><span>The file is called poof.apk and is a few MB.</span></div></li>
+    <li><div>Open the downloaded file<span>If Android says it can't install from your browser, tap <b>Settings</b> and allow it, then go back.</span></div></li>
+    <li><div>Tap <b>Install</b><span>If Play Protect warns you, tap <b>Install anyway</b>. Poof isn't on the Play Store yet.</span></div></li>
+    <li><div>Open Poof and create your account<span>Tap <b>Allow</b> when it asks for notifications, so your phone rings for calls.</span></div></li>
+  </ol>
+
+  <div class="note"><b>Calls on a locked phone:</b> if the screen doesn't light up for a call, open Android Settings, go to Apps, then Poof, then Notifications, and allow <b>Full screen notifications</b>.</div>
+  <div class="note"><b>iPhone?</b> There is no iPhone app yet. Open Poof in Safari, tap Share, then <b>Add to Home Screen</b>. Calls arrive as notifications.</div>
+</main>
+</body>
+</html>

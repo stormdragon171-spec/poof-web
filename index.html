@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6246FF">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Poof">
+<title>Poof</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF0F8;--surface:#FFFFFF;--surface2:#E3E6F3;--ink:#161830;--ink2:#5A5F84;--line:#D5D9EC;
+  --violet:#6246FF;--mint:#B6F26B;--mint-ink:#1B2A06;--eph:#4FA312;--bubble-in:#FFFFFF;--red:#D93A41;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1020;--surface:#181A30;--surface2:#242748;--ink:#EEF0FF;--ink2:#9A9FC8;--line:#2C3058;
+    --violet:#7A62FF;--bubble-in:#242748;--eph:#B6F26B;--red:#FF6B70;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1020;--surface:#181A30;--surface2:#242748;--ink:#EEF0FF;--ink2:#9A9FC8;--line:#2C3058;
+  --violet:#7A62FF;--bubble-in:#242748;--eph:#B6F26B;--red:#FF6B70;color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.4 'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+button:focus-visible,input:focus-visible{outline:2px solid var(--violet);outline-offset:2px}
+h1,h2,h3{font-family:'Bricolage Grotesque','DM Sans',system-ui,sans-serif;margin:0}
+.ic{display:block;flex:none}
+#app{position:relative;height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+@media (min-width:481px){#app{border-left:1px solid var(--line);border-right:1px solid var(--line)}}
+#main{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 20px 10px}
+.logo{font-weight:800;font-size:42px;letter-spacing:-.045em;line-height:1;-webkit-mask-image:linear-gradient(90deg,#000 58%,rgba(0,0,0,.28));mask-image:linear-gradient(90deg,#000 58%,rgba(0,0,0,.28))}
+.hbtns{display:flex;gap:8px;align-items:center}
+.btn{height:48px;padding:0 22px;border-radius:24px;background:var(--violet);color:#fff;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.btn.ghost{background:var(--surface2);color:var(--ink)}
+.btn.block{width:100%}
+.btn.sm{height:40px;padding:0 16px;font-size:14.5px}
+.btn[disabled]{opacity:.6}
+.ib{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:none}
+.ib:active{background:var(--surface2)}
+.list{list-style:none;margin:0;padding:6px 0 20px}
+.row{display:flex;align-items:center;gap:14px;width:100%;padding:12px 20px}
+.row:active{background:var(--surface2)}
+.row .body{flex:1;min-width:0}
+.row .name{font-weight:700}
+.row .sub{display:block;color:var(--ink2);font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px;color:var(--ink2);font-size:12.5px}
+.badge{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--violet);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+.av{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#fff;font:800 19px 'Bricolage Grotesque',sans-serif;flex:none}
+.av.sm{width:36px;height:36px;font-size:15px}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:99px;background:var(--surface2);color:var(--ink2);font-weight:700;font-size:12.5px}
+.chip.on{background:var(--mint);color:var(--mint-ink)}
+.empty{padding:48px 32px;text-align:center;color:var(--ink2)}
+.empty b{display:block;color:var(--ink);font-size:18px;margin-bottom:6px}
+
+.auth{padding:56px 24px 24px;display:flex;flex-direction:column;gap:14px}
+.auth .logo{font-size:64px}
+.lede{margin:0 0 8px;color:var(--ink2);font-size:17px}
+.seg{display:flex;background:var(--surface2);border-radius:24px;padding:4px}
+.seg button{flex:1;height:40px;border-radius:20px;text-align:center;font-weight:700;color:var(--ink2)}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.field{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:14px}
+.field input{height:50px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:0 14px;font:inherit;font-size:16px;font-weight:400}
+.err{color:var(--red);font-weight:700;font-size:14.5px;margin:0;min-height:20px}
+.fine{color:var(--ink2);font-size:13px;margin:0}
+
+.screen{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;background:var(--bg);animation:slidein .2s ease-out}
+.screen[hidden]{display:none}
+@keyframes slidein{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+.chat-head{display:flex;align-items:center;gap:8px;padding:8px 14px 8px 6px;background:var(--surface);border-bottom:1px solid var(--line);flex:none}
+.chat-head .who{flex:1;min-width:0;font-weight:700}
+.msgs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:14px 14px 8px;display:flex;flex-direction:column;gap:6px}
+.msg{display:flex;flex-direction:column;max-width:80%}
+.msg.me{align-self:flex-end;align-items:flex-end}
+.msg.them{align-self:flex-start;align-items:flex-start}
+.bub{position:relative;display:block;padding:9px 14px 11px;border-radius:19px;overflow:hidden;overflow-wrap:anywhere;white-space:pre-wrap}
+.me .bub{background:var(--violet);color:#fff;border-bottom-right-radius:6px}
+.them .bub{background:var(--bubble-in);color:var(--ink);border-bottom-left-radius:6px;box-shadow:0 0 0 1px var(--line)}
+.eph .bub{outline:1.5px dashed var(--eph);outline-offset:2px}
+.bar{position:absolute;left:0;bottom:0;height:3px;width:100%;background:currentColor;opacity:.4;transform-origin:left;transition:transform .5s linear}
+.stat{font-size:11.5px;color:var(--ink2);margin:2px 6px 0}
+.sys{align-self:center;text-align:center;font-size:12.5px;color:var(--ink2);background:var(--surface2);padding:5px 12px;border-radius:14px;margin:8px 0}
+.msg.poof{animation:poof .45s ease-in forwards}
+@keyframes poof{to{opacity:0;filter:blur(8px);transform:scale(1.15) translateY(-8px)}}
+.composer{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--surface);border-top:1px solid var(--line);flex:none}
+.composer input{flex:1;min-width:0;height:44px;border-radius:22px;border:0;background:var(--surface2);color:var(--ink);padding:0 16px;font:inherit;font-size:16px}
+.composer .go{background:var(--violet);color:#fff}
+.scrim{position:absolute;inset:0;z-index:20;background:rgba(8,8,28,.55);display:flex;align-items:flex-end;animation:fade .15s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.sheet{width:100%;max-height:92%;overflow-y:auto;background:var(--surface);border-radius:26px 26px 0 0;padding:22px 20px 24px;animation:up .2s ease-out}
+@keyframes up{from{transform:translateY(40px)}to{transform:none}}
+.sheet h3{font-size:22px;letter-spacing:-.02em;margin-bottom:6px}
+.sheet p{margin:0 0 12px;color:var(--ink2);font-size:14.5px}
+.opt{display:flex;align-items:center;justify-content:space-between;width:100%;padding:15px 2px;border-bottom:1px solid var(--line);font-weight:500}
+.opt i{width:22px;height:22px;border-radius:50%;border:2px solid var(--ink2)}
+.opt.on i{border-color:var(--violet);background:radial-gradient(var(--violet) 45%,transparent 50%)}
+.sheet .field{margin:8px 0}
+#toast{position:absolute;left:50%;bottom:30px;transform:translate(-50%,16px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:500;font-size:14.5px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:60;max-width:90%;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.chat-head .ib{width:40px;height:40px}
+a.btn{text-decoration:none}
+.cam{background:var(--surface2)}
+.bub.pic{padding:0;width:min(230px,62vw);height:min(300px,80vw);overflow:hidden;background:var(--surface2)}
+.bub.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.bub.pic .bar{background:#fff;opacity:.85}
+.bub.once{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(160deg,#6246FF,#FF4F81)!important;color:#fff!important;font-weight:700;box-shadow:none!important;padding:0;width:min(230px,62vw);height:130px}
+.bub.ghost{display:flex;align-items:center;gap:7px;background:transparent!important;color:var(--ink2)!important;box-shadow:inset 0 0 0 1.5px var(--line)!important;font-size:14.5px;padding:8px 14px}
+.snapview{position:absolute;inset:0;z-index:30;background:#000;color:#fff;display:flex;flex-direction:column}
+.snapview .top{display:flex;align-items:center;gap:8px;padding:8px 10px;font-weight:700;font-size:14px}
+.snapview .timer{height:4px;background:rgba(255,255,255,.25);margin:0 12px}
+.snapview .timer i{display:block;height:100%;background:#fff;transform-origin:left}
+.snapview .img{flex:1;min-height:0;display:grid;place-items:center;padding:8px 8px 14px}
+.snapview img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px}
+.pv{display:block;width:100%;max-height:300px;object-fit:cover;border-radius:18px;margin-bottom:14px}
+.swrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.swrow small{display:block;color:var(--ink2);font-size:13.5px;font-weight:400}
+.sw{appearance:none;-webkit-appearance:none;width:50px;height:30px;border-radius:15px;background:var(--surface2);position:relative;flex:none;cursor:pointer;margin:0;transition:background .15s}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .15s}
+.sw:checked{background:var(--violet)}
+.sw:checked::after{transform:translateX(20px)}
+
+.row2{display:flex;gap:10px;margin-top:16px}
+.row2 .btn{flex:1}
+.foot{padding:18px 20px 36px;text-align:center}
+.foot button{color:var(--ink2);font-size:13.5px;text-decoration:underline;text-underline-offset:3px;padding:10px}
+.boot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:70%;padding-top:20vh;color:var(--ink2)}
+.boot .logo{font-size:64px;color:var(--ink)}
+.getapp{margin:6px 16px 4px;padding:14px 16px;border-radius:20px;background:var(--surface);box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:10px}
+.getapp b{font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:17px}
+.getapp p{margin:0;color:var(--ink2);font-size:14px}
+.getapp .acts{display:flex;gap:8px;flex-wrap:wrap}
+.chat-head .who{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.call{z-index:40;background:#14152B;color:#fff;animation:fade .2s}
+.call .stage{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:var(--cg)}
+.rv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;pointer-events:none;background:#14152B}
+.rv.show{opacity:1}
+.info{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:24px}
+.info.over{position:absolute;top:0;left:0;right:0;background:linear-gradient(rgba(0,0,0,.55),transparent);padding-bottom:36px}
+.info.over .big{display:none}
+.info h2{font-size:30px;letter-spacing:-.03em}
+.big{position:relative;width:132px;height:132px;border-radius:50%;display:grid;place-items:center;font:800 54px 'Bricolage Grotesque',sans-serif;margin-bottom:10px}
+.big::before,.big::after{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.45);animation:ringout 2.4s ease-out infinite}
+.big::after{animation-delay:1.2s}
+@keyframes ringout{from{transform:scale(1);opacity:.8}to{transform:scale(1.9);opacity:0}}
+.cstat{font-size:17px;opacity:.9;font-variant-numeric:tabular-nums}
+.self{position:absolute;right:16px;bottom:16px;width:104px;height:140px;border-radius:16px;overflow:hidden;background:#000;box-shadow:0 0 0 2px rgba(255,255,255,.3);z-index:2}
+.self video{width:100%;height:100%;object-fit:cover}
+.self video.mirror{transform:scaleX(-1)}
+.ctrls{display:flex;justify-content:center;gap:18px;padding:18px 16px 26px;flex:none;background:#14152B}
+.cw{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:12px;min-width:64px}
+.cb{width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center;color:#fff}
+.cb.on{background:#fff;color:#14152B}
+.cb.end{background:#E5484D;color:#fff}
+.cb.end svg{transform:rotate(135deg)}
+.cb.acc{background:#2BB673;color:#fff}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div id="app">
+  <main id="main"><div class="boot"><h1 class="logo">poof</h1><p>Loading…</p></div></main>
+  <section id="chat" class="screen" hidden></section>
+  <section id="callScreen" class="screen call" hidden></section>
+  <div id="layer"></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<input type="file" id="fileCam" accept="image/*" capture="environment" hidden>
+<input type="file" id="fileGal" accept="image/*" hidden>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* ====== YOUR SUPABASE DETAILS ====== */
+var SUPABASE_URL='https://bneqelkzfejiffjuspwz.supabase.co';
+var SUPABASE_KEY='sb_publishable_Tx8n3MJ08k0D5Qbkqq4C-A_TmzWnz0g';
+/* Optional: add a TURN server here later if calls will not connect on mobile data.
+   Example: {urls:'turn:your.turn.server:3478',username:'user',credential:'pass'} */
+var TURN_SERVERS=[];
+/* Public key used for phone notifications (safe to share). */
+var VAPID_PUBLIC='BGwvKKJJ0cTBag-M52i6S2Tw_7qLJZpur6zQ4XFOL5pX0w86GikM5gIuJtWuzXwU-C2kSaTzkzFgiKxGmI_PRpo';
+/* =================================== */
+
+var $=function(s,r){return (r||document).querySelector(s)};
+var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var COLORS=['#6246FF','#FF4F81','#0F9B8E','#E8742A','#3A7BFF'];
+var ICON={
+  camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+  eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  eyeoff:'<path d="M3 3l18 18"/><path d="M6 7.5C3.8 9.3 2 12 2 12s4 7 10 7c1.5 0 2.8-.4 4-1M10 5.1A9 9 0 0112 5c6 0 10 7 10 7a17 17 0 01-3 3.5"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  image:'<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M5 18l5-5 4 4 2-2 4 4"/>',
+  
+  back:'<path d="M15 5l-7 7 7 7"/>',
+  send:'<path d="M21 3L10 14"/><path d="M21 3l-7 18-4-8-8-4z"/>',
+  timer:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  out:'<path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9"/>',
+  phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/>',
+  video:'<rect x="3" y="6" width="12" height="12" rx="2"/><path d="M15 10l6-3v10l-6-3z"/>',
+  videooff:'<rect x="3" y="6" width="12" height="12" rx="2"/><path d="M15 10l6-3v10l-6-3z"/><path d="M3 3l18 18"/>',
+  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/>',
+  micoff:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/><path d="M3 3l18 18"/>',
+  flip:'<path d="M4 8a8 8 0 0114-3l2 2M20 16a8 8 0 01-14 3l-2-2"/><path d="M20 3v4h-4M4 21v-4h4"/>'
+};
+function ic(n,s){s=s||22;return '<svg class="ic" width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICON[n]+'</svg>'}
+function colorFor(id){var h=0;for(var i=0;i<id.length;i++)h=(h*31+id.charCodeAt(i))>>>0;return COLORS[h%COLORS.length]}
+function toast(t){var el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove('show')},2800)}
+function fmtTime(ts){var d=new Date(ts),n=new Date();return d.toDateString()===n.toDateString()?d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}):d.toLocaleDateString([],{month:'short',day:'numeric'})}
+function timerLabel(s){return s===0?'Off':s===10?'10s':s===60?'1 min':s===3600?'1 hour':'24 hours'}
+function timerWords(s){return {10:'10 seconds',60:'1 minute',3600:'1 hour',86400:'24 hours'}[s]}
+
+if(!window.supabase){document.getElementById('main').innerHTML='<div class="empty"><b>Could not load Poof</b>Check your internet connection and reload.</div>';return}
+var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{lock:function(n,t,fn){return fn()}}});
+
+var me=null,convos={},openId=null,channel=null,deleting={},authMode='login',tickTimer=null;
+var profileCache={};
+
+function getTimer(id){try{return +localStorage.getItem('poof-timer-'+id)||0}catch(e){return 0}}
+function setTimerPref(id,v){try{localStorage.setItem('poof-timer-'+id,String(v))}catch(e){}}
+
+/* ---------- auth screens ---------- */
+function authScreen(err){
+  var login=authMode==='login';
+  $('#main').innerHTML='<div class="auth"><h1 class="logo">poof</h1><p class="lede">Chat that cleans up after itself.</p>'
+   +'<div class="seg"><button data-act="mode" data-id="login" class="'+(login?'on':'')+'">Log in</button><button data-act="mode" data-id="signup" class="'+(login?'':'on')+'">Create account</button></div>'
+   +'<label class="field">Username<input id="u" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username" maxlength="20" placeholder="e.g. maya_k"></label>'
+   +'<label class="field">Password<input id="p" type="password" autocomplete="'+(login?'current-password':'new-password')+'" placeholder="At least 6 characters"></label>'
+   +'<p class="err" id="err" role="alert">'+esc(err||'')+'</p>'
+   +'<button class="btn block" id="go" data-act="submitAuth">'+(login?'Log in':'Create account')+'</button>'
+   +'<p class="fine">'+(login?'New here? Tap Create account.':'Pick a username friends can search for. Letters, numbers and underscores, 3 to 20 characters.')+'</p></div>';
+}
+function fakeEmail(u){return u+'@poof-app.com'}
+function cleanUser(v){return String(v||'').trim().toLowerCase()}
+function validUser(u){return /^[a-z0-9_]{3,20}$/.test(u)}
+function setBusy(b,label){var g=$('#go');if(g){g.disabled=b;if(label)g.textContent=label}}
+
+function submitAuth(){
+  var u=cleanUser($('#u').value),p=$('#p').value;
+  if(!validUser(u))return authErr('Username must be 3 to 20 letters, numbers or underscores.');
+  if(p.length<6)return authErr('Password needs at least 6 characters.');
+  authErr('');setBusy(true,'One moment…');
+  if(authMode==='login'){
+    sb.auth.signInWithPassword({email:fakeEmail(u),password:p}).then(function(r){
+      if(r.error){setBusy(false,'Log in');return authErr('Wrong username or password.')}
+      afterAuth();
+    });
+  }else{
+    sb.auth.signUp({email:fakeEmail(u),password:p}).then(function(r){
+      if(r.error){
+        setBusy(false,'Create account');
+        return authErr(/registered|exists/i.test(r.error.message)?'That username is taken. Try another.':r.error.message);
+      }
+      if(!r.data.session){setBusy(false,'Create account');return authErr('Email confirmation is still ON in Supabase. Turn it off, then try again.')}
+      afterAuth(u);
+    });
+  }
+}
+function authErr(t){var e=$('#err');if(e)e.textContent=t}
+
+function bootProblem(msg){
+  $('#main').innerHTML='<div class="auth"><h1 class="logo">poof</h1><p class="lede">'+esc(msg)+'</p><button class="btn block" data-act="reloadApp">Try again</button><button class="btn block ghost" data-act="freshStart">Log in again</button></div>';
+}
+function afterAuth(newName){
+  sb.auth.getUser().then(function(r){
+    var user=r.data&&r.data.user;if(!user)return authScreen('Something went wrong. Try again.');
+    return sb.from('profiles').select('*').eq('id',user.id).maybeSingle().then(function(pr){
+      if(pr.data){me=pr.data;return startApp()}
+      if(newName)return createProfile(user.id,newName,true);
+      usernameScreen(user.id);
+    });
+  }).catch(function(){bootProblem('Could not connect. Check your internet and try again.')});
+}
+function createProfile(id,name,fromSignup){
+  return sb.from('profiles').insert({id:id,username:name}).select().single().then(function(r){
+    if(r.error){
+      var msg=r.error.code==='23505'?'That username is taken. Pick another.':'Username must be 3 to 20 letters, numbers or underscores.';
+      return usernameScreen(id,msg);
+    }
+    me=r.data;return startApp();
+  });
+}
+function usernameScreen(id,err){
+  $('#main').innerHTML='<div class="auth"><h1 class="logo">poof</h1><p class="lede">Choose your username.</p><label class="field">Username<input id="u2" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="20" placeholder="e.g. maya_k"></label><p class="err" role="alert">'+esc(err||'')+'</p><button class="btn block" data-act="saveName" data-id="'+id+'">Continue</button></div>';
+}
+
+/* ---------- app start ---------- */
+function startApp(){
+  convos={};
+  return sb.from('messages').select('*').or('sender_id.eq.'+me.id+',recipient_id.eq.'+me.id).order('created_at',{ascending:true}).limit(1000).then(function(r){
+    var rows=r.data||[],ids={};
+    rows.forEach(function(m){var o=m.sender_id===me.id?m.recipient_id:m.sender_id;ids[o]=1});
+    var list=Object.keys(ids);
+    var p=list.length?sb.from('profiles').select('*').in('id',list):Promise.resolve({data:[]});
+    return p.then(function(pr){
+      (pr.data||[]).forEach(function(x){profileCache[x.id]=x});
+      rows.forEach(function(m){addMsg(m)});
+      subscribe();subscribeCalls();syncPush(false);syncNativePush();
+      if(!tickTimer)tickTimer=setInterval(tick,500);
+      listScreen();
+      setTimeout(offerNotifSetup,700);
+    });
+  });
+}
+function addMsg(m){
+  var o=m.sender_id===me.id?m.recipient_id:m.sender_id,pf=profileCache[o];
+  if(!pf)return false;
+  var c=convos[o]||(convos[o]={p:pf,msgs:[]}),i=-1;
+  c.msgs.forEach(function(x,k){if(x.id===m.id)i=k});
+  if(i>=0)c.msgs[i]=m;else c.msgs.push(m);
+  return true;
+}
+function subscribe(){
+  if(channel)sb.removeChannel(channel);
+  channel=sb.channel('poof-messages').on('postgres_changes',{event:'*',schema:'public',table:'messages'},function(p){
+    if(p.eventType==='DELETE'){removeMsg(p.old&&p.old.id);return}
+    var m=p.new,o=m.sender_id===me.id?m.recipient_id:m.sender_id;
+    var go=function(){addMsg(m);onChange(o)};
+    if(profileCache[o])go();
+    else sb.from('profiles').select('*').eq('id',o).maybeSingle().then(function(r){if(r.data){profileCache[o]=r.data;go()}});
+  }).subscribe();
+}
+function removeMsg(id){
+  if(!id)return;
+  Object.keys(convos).forEach(function(o){
+    var c=convos[o],n=c.msgs.length;
+    c.msgs=c.msgs.filter(function(m){return m.id!==id});
+    if(n!==c.msgs.length)onChange(o);
+  });
+}
+function onChange(o){
+  if(openId===o){markSeen(o);renderMsgs(true)}
+  else if(!openId)listScreen();
+}
+
+/* ---------- chat list ---------- */
+function lastMsg(c){return c.msgs[c.msgs.length-1]}
+function unread(c){return c.msgs.filter(function(m){return m.recipient_id===me.id&&!m.seen_at}).length}
+function listScreen(){
+  if(!me)return;
+  var ids=Object.keys(convos).sort(function(a,b){
+    var x=lastMsg(convos[a]),y=lastMsg(convos[b]);
+    return (y?new Date(y.created_at):0)-(x?new Date(x.created_at):0);
+  });
+  var rows=ids.map(function(id){
+    var c=convos[id],m=lastMsg(c),u=unread(c),t=getTimer(id);
+    return '<li><button class="row" data-act="openChat" data-id="'+id+'"><span class="av" style="background:'+colorFor(id)+'">'+esc(c.p.username[0].toUpperCase())+'</span><span class="body"><span class="name">'+esc(c.p.username)+'</span><span class="sub">'+(m?esc((m.sender_id===me.id?'You: ':'')+(m.image_path?(m.view_once?'Snap':'Photo'):(m.body||''))):'Say hi')+'</span></span><span class="meta"><span>'+(m?fmtTime(m.created_at):'')+'</span>'+(u?'<span class="badge">'+u+'</span>':(t?'<span class="chip on">'+ic('timer',12)+timerLabel(t)+'</span>':''))+'</span></button></li>';
+  }).join('');
+  $('#main').innerHTML='<div class="head"><h1 class="logo">poof</h1><div class="hbtns"><button class="btn sm" data-act="newChat">'+ic('plus',16)+'New chat</button></div></div>'+appBanner()
+   +(rows?'<ul class="list">'+rows+'</ul>':'<div class="empty"><b>No chats yet</b>You are <b style="display:inline;font-size:inherit">@'+esc(me.username)+'</b>. Tap New chat and search for a friend\'s username to start.</div>')+'<div class="foot"><button data-act="signOut">Log out @'+esc(me.username)+'</button><p class="fine" style="margin:4px 0 0">v8 \u00B7 '+(isNative()?'Android app':'web')+'</p></div>';
+}
+
+/* ---------- new chat ---------- */
+var searchT;
+function newChat(){
+  $('#layer').innerHTML='<div class="scrim" data-act="scrim"><div class="sheet"><h3>New chat</h3><p>Search for a friend by username.</p><label class="field">Username<input id="q" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Start typing…"></label><ul class="list" id="results" style="padding:0"></ul></div></div>';
+  setTimeout(function(){var q=$('#q');if(q)q.focus()},50);
+}
+function doSearch(){
+  var q=cleanUser($('#q').value).replace(/[^a-z0-9_]/g,'');
+  var box=$('#results');if(!box)return;
+  if(q.length<2){box.innerHTML='';return}
+  sb.from('profiles').select('*').ilike('username',q.replace(/_/g,'\\_')+'%').neq('id',me.id).limit(10).then(function(r){
+    var b=$('#results');if(!b)return;
+    var d=r.data||[];
+    d.forEach(function(x){profileCache[x.id]=x});
+    b.innerHTML=d.length?d.map(function(x){return '<li><button class="row" style="padding-left:0;padding-right:0" data-act="startChat" data-id="'+x.id+'"><span class="av sm" style="background:'+colorFor(x.id)+'">'+esc(x.username[0].toUpperCase())+'</span><span class="body"><span class="name">'+esc(x.username)+'</span></span></button></li>'}).join(''):'<li class="fine" style="padding:10px 0">No one found with that username.</li>';
+  });
+}
+function startChat(id){
+  var pf=profileCache[id];if(!pf)return;
+  if(!convos[id])convos[id]={p:pf,msgs:[]};
+  $('#layer').innerHTML='';openChat(id);
+}
+
+/* ---------- chat screen ---------- */
+function openChat(id){
+  var c=convos[id];if(!c)return;openId=id;
+  var t=getTimer(id),el=$('#chat');el.hidden=false;
+  el.innerHTML='<div class="chat-head"><button class="ib" data-act="closeChat" aria-label="Back">'+ic('back',24)+'</button><span class="av sm" style="background:'+colorFor(id)+'">'+esc(c.p.username[0].toUpperCase())+'</span><div class="who">'+esc(c.p.username)+'</div><button class="ib" data-act="call" data-id="voice" aria-label="Voice call">'+ic('phone',21)+'</button><button class="ib" data-act="call" data-id="video" aria-label="Video call">'+ic('video',23)+'</button><button class="chip'+(t?' on':'')+'" id="tchip" data-act="timerSheet" aria-label="Disappearing messages">'+ic('timer',15)+timerLabel(t)+'</button></div><div class="msgs" id="msgs" aria-live="polite"></div><div class="composer"><button class="ib cam" data-act="pickPhoto" aria-label="Send a photo">'+ic('camera',22)+'</button><input id="mi" placeholder="Message" enterkeyhint="send" autocomplete="off" aria-label="Message"><button class="ib go" data-act="send" aria-label="Send">'+ic('send',20)+'</button></div>';
+  markSeen(id);renderMsgs(true);
+}
+function closeChat(){openId=null;var el=$('#chat');el.hidden=true;el.innerHTML='';listScreen()}
+function markSeen(id){
+  var c=convos[id];if(!c)return;
+  var un=c.msgs.filter(function(m){return m.recipient_id===me.id&&!m.seen_at&&!m.view_once});
+  un.forEach(function(m){
+    var now=Date.now();
+    m.seen_at=new Date(now).toISOString();
+    m.expires_at=m.ttl_seconds>0?new Date(now+m.ttl_seconds*1000).toISOString():null;
+    sb.from('messages').update({seen_at:m.seen_at,expires_at:m.expires_at}).eq('id',m.id).then(function(){});
+  });
+}
+function renderMsgs(stick){
+  var box=$('#msgs'),c=convos[openId];if(!box||!c)return;
+  var near=box.scrollHeight-box.scrollTop-box.clientHeight<90;
+  box.innerHTML=c.msgs.length?c.msgs.map(function(m){
+    var mine=m.sender_id===me.id,eph=m.ttl_seconds>0;
+    return '<div class="msg '+(mine?'me':'them')+(eph?' eph':'')+(m.gone?' poof':'')+'" data-id="'+m.id+'">'+bubHtml(m,mine)+(mine?'<span class="stat">'+(m.seen_at?'Seen':'Sent')+'</span>':'')+'</div>';
+  }).join(''):'<div class="sys">Say hi to '+esc(c.p.username)+'. Pick the timer at the top to make messages disappear.</div>';
+  if(stick||near)box.scrollTop=box.scrollHeight;
+  tickBars();
+  loadImages();
+}
+function tickBars(){
+  var c=convos[openId];if(!c)return;var now=Date.now();
+  c.msgs.forEach(function(m){
+    if(!m.expires_at)return;
+    var el=document.querySelector('[data-bar="'+m.id+'"]');
+    if(el)el.style.transform='scaleX('+Math.max(0,Math.min(1,(new Date(m.expires_at)-now)/(m.ttl_seconds*1000)))+')';
+  });
+}
+function sendMsg(){
+  var inp=$('#mi');if(!inp)return;
+  var v=inp.value.trim();if(!v)return;
+  var id=openId;inp.value='';
+  sb.from('messages').insert({recipient_id:id,body:v,ttl_seconds:getTimer(id)}).select().single().then(function(r){
+    if(r.error){inp.value=v;return toast('Could not send. Check your connection.')}
+    addMsg(r.data);if(openId===id)renderMsgs(true);
+  });
+}
+function timerSheet(){
+  var t=getTimer(openId);
+  $('#layer').innerHTML='<div class="scrim" data-act="scrim"><div class="sheet"><h3>Disappearing messages</h3><p>New messages vanish this long after they are seen. Older messages stay.</p>'+[[0,'Off'],[10,'10 seconds'],[60,'1 minute'],[3600,'1 hour'],[86400,'24 hours']].map(function(o){return '<button class="opt'+(t===o[0]?' on':'')+'" data-act="setTimer" data-id="'+o[0]+'">'+o[1]+'<i></i></button>'}).join('')+'</div></div>';
+}
+function setTimer(v){
+  v=+v;setTimerPref(openId,v);$('#layer').innerHTML='';
+  var chip=$('#tchip');if(chip){chip.className='chip'+(v?' on':'');chip.innerHTML=ic('timer',15)+timerLabel(v)}
+  toast(v?'Messages vanish '+timerWords(v)+' after being seen':'Disappearing messages off');
+}
+
+/* ---------- photos and view-once snaps ---------- */
+var imgUrls={},urlBusy=false,draft=null,snap=null;
+function bubHtml(m,mine){
+  var bar=m.expires_at?'<i class="bar" data-bar="'+m.id+'"></i>':'';
+  if(m.image_path){
+    if(m.view_once){
+      if(m.seen_at)return '<div class="bub ghost">'+ic('eyeoff',17)+'Opened</div>';
+      if(mine)return '<div class="bub ghost">'+ic('eye',17)+'Snap sent</div>';
+      return '<button class="bub once" data-act="openSnap" data-id="'+m.id+'" aria-label="Open snap, view once">'+ic('eye',30)+'Tap to view once</button>';
+    }
+    var u=imgUrls[m.image_path];
+    if(u&&u.url)return '<button class="bub pic" data-act="openImg" data-id="'+m.id+'" aria-label="Open photo"><img src="'+esc(u.url)+'" alt="Photo">'+bar+'</button>';
+    return '<div class="bub pic"><span style="display:grid;place-items:center;height:100%;color:var(--ink2)">'+(u?'Photo unavailable':'Loading\u2026')+'</span>'+bar+'</div>';
+  }
+  return '<div class="bub">'+esc(m.body||'')+bar+'</div>';
+}
+function loadImages(){
+  var c=convos[openId];if(!c||urlBusy)return;
+  var need=c.msgs.filter(function(m){return m.image_path&&!m.view_once&&!m.gone&&(!imgUrls[m.image_path]||imgUrls[m.image_path].exp<Date.now())}).map(function(m){return m.image_path});
+  if(!need.length)return;
+  urlBusy=true;
+  sb.storage.from('snaps').createSignedUrls(need,3600).then(function(r){
+    urlBusy=false;
+    need.forEach(function(pth){imgUrls[pth]={url:'',exp:Date.now()+30000}});
+    (r.data||[]).forEach(function(x){if(x&&x.signedUrl)imgUrls[x.path]={url:x.signedUrl,exp:Date.now()+3500000}});
+    if(openId)renderMsgs(false);
+  }).catch(function(){urlBusy=false;need.forEach(function(pth){imgUrls[pth]={url:'',exp:Date.now()+30000}})});
+}
+function pickPhoto(){
+  $('#layer').innerHTML='<div class="scrim" data-act="scrim"><div class="sheet"><h3>Send a photo</h3><p>You can make it disappear after one view.</p><div class="row2"><button class="btn" data-act="camPhoto">'+ic('camera',18)+'Take photo</button><button class="btn ghost" data-act="galPhoto">'+ic('image',18)+'Gallery</button></div></div></div>';
+}
+function toBlob(file){
+  return new Promise(function(res,rej){
+    var fr=new FileReader();fr.onerror=rej;
+    fr.onload=function(){
+      var im=new Image();im.onerror=rej;
+      im.onload=function(){
+        var k=Math.min(1,1280/Math.max(im.width,im.height)),w=Math.round(im.width*k),h=Math.round(im.height*k);
+        var cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(im,0,0,w,h);
+        cv.toBlob(function(b){b?res(b):rej(new Error('encode'))},'image/jpeg',0.82);
+      };
+      im.src=fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+function picked(file){
+  if(!file||!openId)return;
+  toBlob(file).then(function(b){
+    if(draft)URL.revokeObjectURL(draft.url);
+    draft={blob:b,url:URL.createObjectURL(b)};
+    $('#layer').innerHTML='<div class="scrim" data-act="scrim"><div class="sheet"><img class="pv" src="'+draft.url+'" alt="Photo preview"><label class="swrow"><span><b>View once</b><small>They can open it one time, then it is gone.</small></span><input type="checkbox" id="viewOnce" class="sw"></label><div class="row2"><button class="btn ghost" data-act="scrim">Cancel</button><button class="btn" data-act="sendPhoto">Send</button></div></div></div>';
+  }).catch(function(){toast('Could not open that photo')});
+}
+function sendPhoto(){
+  var d=draft,id=openId;if(!d||!id)return;
+  var once=$('#viewOnce')&&$('#viewOnce').checked;
+  $('#layer').innerHTML='';toast('Sending\u2026');
+  var path=me.id+'/'+cid()+'.jpg';
+  sb.storage.from('snaps').upload(path,d.blob,{contentType:'image/jpeg',upsert:false}).then(function(r){
+    if(r.error)throw r.error;
+    return sb.from('messages').insert({recipient_id:id,image_path:path,view_once:!!once,ttl_seconds:once?0:getTimer(id)}).select().single();
+  }).then(function(r){
+    if(r.error)throw r.error;
+    addMsg(r.data);if(openId===id)renderMsgs(true);
+    URL.revokeObjectURL(d.url);if(draft===d)draft=null;
+  }).catch(function(){toast('Could not send the photo. Try again.')});
+}
+function findMsg(id){var c=convos[openId];return c?c.msgs.filter(function(x){return x.id===id})[0]:null}
+function openImg(id){
+  var m=findMsg(id),u=m&&imgUrls[m.image_path];if(!u||!u.url)return;
+  $('#layer').innerHTML='<div class="snapview"><div class="top"><button class="ib" data-act="scrim" aria-label="Close">'+ic('x',24)+'</button></div><div class="img"><img src="'+esc(u.url)+'" alt="Photo"></div></div>';
+}
+function openSnap(id){
+  var m=findMsg(id);
+  if(!m||snap||m.sender_id===me.id||m.seen_at||!m.view_once)return;
+  toast('Opening\u2026');
+  sb.storage.from('snaps').download(m.image_path).then(function(r){
+    if(r.error||!r.data)throw (r.error||new Error('missing'));
+    var url=URL.createObjectURL(r.data);
+    snap={id:m.id,path:m.image_path,url:url,t0:Date.now(),iv:0};
+    try{if(window.PoofNative&&PoofNative.setSecure)PoofNative.setSecure(true)}catch(e){}
+    $('#layer').innerHTML='<div class="snapview"><div class="top"><button class="ib" data-act="closeSnap" aria-label="Close">'+ic('x',24)+'</button><span>View once. It disappears when you close it.</span></div><div class="timer"><i id="snapbar"></i></div><div class="img"><img src="'+url+'" alt="Snap"></div></div>';
+    var s0=snap;
+    s0.iv=setInterval(function(){var p=(Date.now()-s0.t0)/10000,b=$('#snapbar');if(b)b.style.transform='scaleX('+Math.max(0,1-p)+')';if(p>=1)closeSnap()},100);
+  }).catch(function(){toast('This snap is no longer available.')});
+}
+function closeSnap(){
+  var s0=snap;if(!s0)return;
+  snap=null;clearInterval(s0.iv);$('#layer').innerHTML='';URL.revokeObjectURL(s0.url);
+  try{if(window.PoofNative&&PoofNative.setSecure)PoofNative.setSecure(false)}catch(e){}
+  var m=findMsg(s0.id),now=Date.now(),seen=new Date(now).toISOString(),exp=new Date(now+86400000).toISOString();
+  if(m){m.seen_at=seen;m.expires_at=exp}
+  sb.storage.from('snaps').remove([s0.path]).then(function(){},function(){});
+  sb.from('messages').update({seen_at:seen,expires_at:exp}).eq('id',s0.id).then(function(){},function(){});
+  if(openId)renderMsgs(false);
+}
+
+/* ---------- vanishing ---------- */
+function tick(){
+  if(!me)return;var now=Date.now();
+  Object.keys(convos).forEach(function(o){
+    var c=convos[o];
+    c.msgs.forEach(function(m){
+      if(m.expires_at&&!m.gone&&new Date(m.expires_at)<=now){
+        m.gone=true;
+        if(!deleting[m.id]){deleting[m.id]=1;var delRow=function(){sb.from('messages').delete().eq('id',m.id).then(function(){},function(){})};if(m.image_path)sb.storage.from('snaps').remove([m.image_path]).then(delRow,delRow);else delRow()}
+        if(openId===o){
+          var el=document.querySelector('.msg[data-id="'+m.id+'"]');if(el)el.classList.add('poof');
+          setTimeout(function(){removeMsg(m.id)},480);
+        }else removeMsg(m.id);
+      }
+    });
+  });
+  tickBars();
+}
+
+/* ---------- real voice and video calls (WebRTC) ---------- */
+var call=null,sigCh=null,ringCtx=null,ringIv=0;
+function cid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
+function iceServers(){return [{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}].concat(TURN_SERVERS)}
+function dur(ms){var s=Math.max(0,Math.floor(ms/1000)),m=Math.floor(s/60);s=s%60;return m+':'+('0'+s).slice(-2)}
+function handleSignal(r){
+  var p=r.data||{};
+  p.from=r.sender_id;p.to=r.recipient_id;
+  sb.from('call_signals').delete().eq('id',r.id).then(function(){},function(){});
+  if(p.t==='invite'&&Date.now()-new Date(r.created_at).getTime()>90000)return;
+  if(p.t==='invite'&&!profileCache[p.from]){
+    sb.from('profiles').select('*').eq('id',p.from).maybeSingle().then(function(x){if(x.data)profileCache[x.data.id]=x.data;onSig(p)},function(){onSig(p)});
+  }else onSig(p);
+}
+function pickupSignals(){
+  if(!me)return;
+  sb.from('call_signals').select('*').eq('recipient_id',me.id).order('created_at',{ascending:true}).then(function(x){
+    var rows=x.data||[],gone={},t=Date.now();
+    rows.forEach(function(r){var d=r.data||{};if(d.t==='cancel'||d.t==='end'||d.t==='decline')gone[d.callId]=1});
+    rows.forEach(function(r){
+      var d=r.data||{};
+      if(d.t==='invite'&&!gone[d.callId]&&!call&&t-new Date(r.created_at).getTime()<40000)handleSignal(r);
+      else sb.from('call_signals').delete().eq('id',r.id).then(function(){},function(){});
+    });
+  });
+}
+function subscribeCalls(){
+  if(sigCh)sb.removeChannel(sigCh);
+  sigCh=sb.channel('poof-calls-'+me.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'call_signals',filter:'recipient_id=eq.'+me.id},function(m){handleSignal(m.new||{})}).subscribe();
+  pickupSignals();
+}
+function sendSig(id,p){
+  return sb.from('call_signals').insert({recipient_id:id,data:p}).then(function(){},function(){});
+}
+function getMedia(kind,facing){
+  return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true},video:kind==='video'?{facingMode:facing||'user'}:false});
+}
+function stopStream(s){if(s)s.getTracks().forEach(function(t){t.stop()})}
+function startRing(){
+  try{
+    ringCtx=ringCtx||new (window.AudioContext||window.webkitAudioContext)();
+    if(ringCtx.resume)ringCtx.resume();
+    var beep=function(){var o=ringCtx.createOscillator(),g=ringCtx.createGain();o.frequency.value=480;g.gain.value=.12;o.connect(g);g.connect(ringCtx.destination);o.start();setTimeout(function(){try{o.stop()}catch(e){}},420)};
+    beep();ringIv=setInterval(beep,1600);
+  }catch(e){}
+  try{if(navigator.vibrate)navigator.vibrate([400,200,400,200,400])}catch(e){}
+}
+function stopRing(){clearInterval(ringIv);ringIv=0;try{if(navigator.vibrate)navigator.vibrate(0)}catch(e){}}
+
+function startCall(kind){
+  var c=convos[openId];if(!c||call)return;
+  kind=kind==='video'?'video':'voice';
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.RTCPeerConnection)return toast('Calls are not supported in this browser.');
+  getMedia(kind,'user').then(function(stream){
+    if(call){stopStream(stream);return}
+    var k=call={id:cid(),peerId:openId,peerName:c.p.username,kind:kind,role:'caller',phase:'ringing',local:stream,remote:null,pc:null,muted:false,camOn:kind==='video',facing:'user',pending:[],start:0,iv:0,to:0};
+    drawCall();
+    sendSig(k.peerId,{t:'invite',callId:k.id,kind:kind,fromName:me.username});
+    k.to=setTimeout(function(){
+      if(call===k&&k.phase==='ringing'){sendSig(k.peerId,{t:'cancel',callId:k.id});endCall('missed',false)}
+    },45000);
+  }).catch(function(){toast('Allow microphone'+(kind==='video'?' and camera':'')+' access to make calls.')});
+}
+function incomingCall(p){
+  var pf=profileCache[p.from],kind=p.kind==='video'?'video':'voice';
+  var k=call={id:String(p.callId),peerId:p.from,peerName:pf?pf.username:String(p.fromName||'Someone').slice(0,20),kind:kind,role:'callee',phase:'incoming',local:null,remote:null,pc:null,muted:false,camOn:kind==='video',facing:'user',pending:[],start:0,iv:0,to:0};
+  k.to=setTimeout(function(){
+    if(call===k&&k.phase==='incoming'){sendSig(k.peerId,{t:'decline',callId:k.id});endCall('missed',false)}
+  },45000);
+  startRing();drawCall();
+  if(wantAnswer&&Date.now()-wantAnswer<60000){wantAnswer=0;setTimeout(function(){if(call===k&&k.phase==='incoming')acceptCall()},400)}
+}
+function acceptCall(){
+  var k=call;if(!k||k.phase!=='incoming')return;
+  clearTimeout(k.to);stopRing();k.phase='connecting';drawCall();
+  getMedia(k.kind,'user').then(function(s){
+    if(call!==k){stopStream(s);return}
+    k.local=s;makePC();attachMedia();
+    sendSig(k.peerId,{t:'accept',callId:k.id});
+  }).catch(function(){
+    toast('Allow microphone'+(k.kind==='video'?' and camera':'')+' access to answer.');
+    sendSig(k.peerId,{t:'decline',callId:k.id});endCall('declined',false);
+  });
+}
+function declineCall(){
+  var k=call;if(!k)return;
+  sendSig(k.peerId,{t:'decline',callId:k.id});endCall('declined',false);
+}
+function hangUp(){
+  var k=call;if(!k)return;
+  sendSig(k.peerId,{t:k.phase==='ringing'?'cancel':'end',callId:k.id});
+  endCall(k.phase==='ringing'?'missed':'ended',false);
+}
+function makePC(){
+  var k=call,pc=new RTCPeerConnection({iceServers:iceServers()});
+  k.local.getTracks().forEach(function(t){pc.addTrack(t,k.local)});
+  pc.onicecandidate=function(e){if(e.candidate&&call===k)sendSig(k.peerId,{t:'ice',callId:k.id,c:e.candidate.toJSON()})};
+  pc.ontrack=function(e){if(call!==k)return;k.remote=e.streams[0];attachMedia()};
+  pc.onconnectionstatechange=function(){
+    if(call!==k)return;
+    if(pc.connectionState==='connected'&&k.phase!=='connected')connectedCall(k);
+    else if(pc.connectionState==='failed'){
+      toast('Could not connect the call. If it keeps failing on mobile data, a relay server is needed.');
+      sendSig(k.peerId,{t:'end',callId:k.id});endCall('failed',false);
+    }
+  };
+  k.pc=pc;return pc;
+}
+function connectedCall(k){
+  k.phase='connected';k.start=Date.now();
+  k.iv=setInterval(function(){var el=$('#ctime');if(el&&call===k)el.textContent=dur(Date.now()-k.start)},500);
+  drawCall();
+}
+function flushIce(k){
+  var q=k.pending;k.pending=[];
+  q.forEach(function(c){k.pc.addIceCandidate(c).catch(function(){})});
+}
+function onSig(p){
+  if(!me||p.to!==me.id||!p.t)return;
+  var k=call;
+  if(p.t==='invite'){
+    if(k){sendSig(p.from,{t:'busy',callId:p.callId});return}
+    incomingCall(p);return;
+  }
+  if(!k||k.id!==String(p.callId)||k.peerId!==p.from)return;
+  if(p.t==='cancel'&&k.role==='callee'&&k.phase==='incoming'){
+    toast('Missed call from '+k.peerName);endCall('missed',false);
+  }else if(p.t==='accept'&&k.role==='caller'&&k.phase==='ringing'){
+    clearTimeout(k.to);k.phase='connecting';drawCall();
+    var pc=makePC();
+    pc.createOffer().then(function(o){return pc.setLocalDescription(o)}).then(function(){
+      sendSig(k.peerId,{t:'offer',callId:k.id,sdp:pc.localDescription.toJSON()});
+    }).catch(function(){toast('Could not start the call.');hangUp()});
+  }else if(p.t==='offer'&&k.role==='callee'&&k.pc){
+    var pc2=k.pc;
+    pc2.setRemoteDescription(p.sdp).then(function(){flushIce(k);return pc2.createAnswer()}).then(function(a){return pc2.setLocalDescription(a)}).then(function(){
+      sendSig(k.peerId,{t:'answer',callId:k.id,sdp:pc2.localDescription.toJSON()});
+    }).catch(function(){toast('Could not answer the call.');hangUp()});
+  }else if(p.t==='answer'&&k.role==='caller'&&k.pc){
+    k.pc.setRemoteDescription(p.sdp).then(function(){flushIce(k)}).catch(function(){});
+  }else if(p.t==='ice'&&p.c){
+    if(k.pc&&k.pc.remoteDescription)k.pc.addIceCandidate(p.c).catch(function(){});else k.pending.push(p.c);
+  }else if(p.t==='decline'&&k.role==='caller'){
+    toast(k.peerName+' declined the call');endCall('declined',false);
+  }else if(p.t==='busy'&&k.role==='caller'){
+    toast(k.peerName+' is on another call');endCall('missed',false);
+  }else if(p.t==='end'){
+    endCall('ended',false);
+  }
+}
+function endCall(reason){
+  var k=call;if(!k)return;call=null;
+  clearTimeout(k.to);clearInterval(k.iv);stopRing();
+  try{if(k.pc)k.pc.close()}catch(e){}
+  stopStream(k.local);
+  var el=$('#callScreen');el.hidden=true;el.innerHTML='';
+  if(k.role==='caller'){
+    var label=k.kind==='video'?'Video call':'Voice call',text;
+    if(k.phase==='connected')text=label+' · '+dur(Date.now()-k.start);
+    else if(reason==='declined')text='Call declined';
+    else if(reason==='failed')text=null;
+    else text='Missed '+(k.kind==='video'?'video':'voice')+' call';
+    if(text)sb.from('messages').insert({recipient_id:k.peerId,body:text,ttl_seconds:0}).select().single().then(function(r){
+      if(!r.error&&r.data){addMsg(r.data);if(openId===k.peerId)renderMsgs(true);else if(!openId)listScreen()}
+    });
+  }
+}
+function attachMedia(){
+  if(!call)return;
+  var rv=$('#rv');
+  if(rv&&call.remote&&rv.srcObject!==call.remote){rv.srcObject=call.remote;if(rv.play)rv.play().catch(function(){var f=function(){var r=$('#rv');if(r&&r.play)r.play().catch(function(){});document.removeEventListener('click',f)};document.addEventListener('click',f)})}
+  var lv=$('#lv');
+  if(lv&&call.local){lv.srcObject=call.local}
+}
+function drawCall(){
+  var k=call,el=$('#callScreen');
+  if(!k){el.hidden=true;el.innerHTML='';return}
+  el.hidden=false;
+  var video=k.kind==='video',col=colorFor(k.peerId),showVid=video&&k.phase==='connected';
+  var status=k.phase==='incoming'?(video?'Incoming video call':'Incoming voice call'):k.phase==='ringing'?'Ringing…':k.phase==='connecting'?'Connecting…':'<span id="ctime">'+dur(Date.now()-k.start)+'</span>';
+  var ctrl=function(act,icon,label,on,cls){return '<div class="cw"><button class="cb '+(on?'on ':'')+(cls||'')+'" data-act="'+act+'" aria-label="'+label+'">'+ic(icon,26)+'</button>'+label+'</div>'};
+  var ctrls=k.phase==='incoming'
+    ?ctrl('callDecline','phone','Decline',false,'end')+ctrl('callAccept',video?'video':'phone','Accept',false,'acc')
+    :ctrl('callMute',k.muted?'micoff':'mic',k.muted?'Unmute':'Mute',k.muted)+(video?ctrl('callCam',k.camOn?'video':'videooff',k.camOn?'Camera':'Camera off',!k.camOn)+ctrl('callFlip','flip','Flip',false):'')+ctrl('callEnd','phone','End',false,'end');
+  el.innerHTML='<div class="stage" style="--cg:linear-gradient(165deg,'+col+',#14152B 80%)"><video id="rv" class="rv'+(showVid?' show':'')+'" autoplay playsinline></video>'
+    +(video&&k.local&&k.phase!=='incoming'?'<div class="self"><video id="lv" autoplay playsinline muted class="'+(k.facing==='user'?'mirror':'')+'"></video></div>':'')
+    +'<div class="info'+(showVid?' over':'')+'"><div class="big" style="background:'+col+'">'+esc(k.peerName[0].toUpperCase())+'</div><h2>'+esc(k.peerName)+'</h2><div class="cstat">'+status+'</div></div></div><div class="ctrls">'+ctrls+'</div>';
+  attachMedia();
+}
+function flipCamera(){
+  var k=call;if(!k||!k.local)return;
+  var old=k.local.getVideoTracks()[0],prev=k.facing;
+  k.facing=prev==='user'?'environment':'user';
+  if(old){old.stop();k.local.removeTrack(old)}
+  navigator.mediaDevices.getUserMedia({video:{facingMode:k.facing}}).catch(function(){
+    k.facing=prev;return navigator.mediaDevices.getUserMedia({video:{facingMode:prev}});
+  }).then(function(s){
+    var nt=s.getVideoTracks()[0];nt.enabled=k.camOn;
+    k.local.addTrack(nt);
+    var snd=k.pc&&k.pc.getSenders().filter(function(x){return x.track===null||x.track.kind==='video'})[0];
+    if(snd)snd.replaceTrack(nt);
+    drawCall();
+  }).catch(function(){toast('Could not switch the camera')});
+}
+window.addEventListener('pagehide',function(){if(call&&me)sendSig(call.peerId,{t:call.phase==='ringing'?'cancel':'end',callId:call.id})});
+
+/* ---------- install app + phone notifications ---------- */
+var deferredInstall=null,pushOn=false,bannerHidden=false,wantAnswer=0;
+if(/[?&]answer=1/.test(location.search)){wantAnswer=Date.now();try{history.replaceState(null,'',location.pathname)}catch(e){}}
+function isNative(){return !!window.PoofNative}
+if(isNative()){try{if(window.PoofNative.consumeAnswer())wantAnswer=Date.now()}catch(e){}}
+window.poofNativeAnswer=function(){
+  try{window.PoofNative.consumeAnswer()}catch(e){}
+  wantAnswer=Date.now();
+  if(call&&call.phase==='incoming'){wantAnswer=0;acceptCall()}else pickupSignals();
+};
+function syncNativePush(){
+  if(!isNative()||!me)return;
+  var tries=0;
+  (function go(){
+    var t='';try{t=window.PoofNative.getToken()}catch(e){}
+    if(t){
+      Promise.resolve(sb.from('push_subscriptions').upsert({endpoint:'fcm:'+t,p256dh:'fcm',auth:'fcm',user_id:me.id},{onConflict:'endpoint'})).then(function(r){if(r&&r.error)toast('Could not register this phone for calls.')}).catch(function(){});
+    }else if(tries++<40)setTimeout(go,1500);
+  })();
+}
+if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',function(e){
+  var d=e.data||{};
+  if(d.type==='answer-call'){
+    if(call&&call.phase==='incoming'){wantAnswer=0;acceptCall()}
+    else{wantAnswer=Date.now();pickupSignals()}
+  }
+});
+function isStandalone(){return (window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true}
+function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)}
+function pushSupported(){return ('Notification' in window)&&('serviceWorker' in navigator)&&('PushManager' in window)}
+function b64ToU8(b){var p='='.repeat((4-b.length%4)%4),r=atob((b+p).replace(/-/g,'+').replace(/_/g,'/')),o=new Uint8Array(r.length);for(var i=0;i<r.length;i++)o[i]=r.charCodeAt(i);return o}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredInstall=e;if(me&&!openId)listScreen()});
+window.addEventListener('appinstalled',function(){deferredInstall=null;toast('Poof is installed');if(me&&!openId)listScreen()});
+var APK_URL='https://github.com/stormdragon171-spec/poof-android/releases/latest/download/poof.apk';
+function appBanner(){
+  if(bannerHidden||isNative())return '';
+  if(/android/i.test(navigator.userAgent)){
+    return '<div class="getapp"><b>Get the Poof Android app</b><p>It rings like a real call, even when your phone is locked.</p><div class="acts"><a class="btn sm" href="'+APK_URL+'">Download the app</a><a class="btn sm ghost" href="get.html">How to install</a><button class="btn sm ghost" data-act="hideBanner">Not now</button></div></div>';
+  }
+  var needPush=pushSupported()&&!pushOn&&Notification.permission!=='denied';
+  var denied=pushSupported()&&Notification.permission==='denied';
+  var needInstall=!isStandalone();
+  if(!needPush&&!needInstall&&!denied)return '';
+  var txt='',btns='';
+  if(needInstall){
+    if(deferredInstall)btns+='<button class="btn sm" data-act="installApp">Install Poof</button>';
+    else txt+=isIOS()?'To install: tap the Share button, then Add to Home Screen. ':'To install: open the browser menu \u22EE and tap Install app or Add to Home screen. ';
+  }
+  if(needPush)btns+='<button class="btn sm '+(deferredInstall?'ghost':'')+'" data-act="enablePush">Turn on notifications</button>';
+  if(denied)txt+='Notifications are blocked. Allow them for this site in your browser settings to get calls and messages when Poof is closed. ';
+  btns+='<button class="btn sm ghost" data-act="hideBanner">Not now</button>';
+  return '<div class="getapp"><b>Get the Poof app</b><p>'+txt+(needPush?'Get notified of messages and calls even when Poof is closed.':'')+'</p><div class="acts">'+btns+'</div></div>';
+}
+function offerNotifSetup(){
+  if(isNative())return;
+  if(!me||!pushSupported()||Notification.permission!=='default'||call)return;
+  var asked=false;try{asked=localStorage.getItem('poof-notif-asked')==='1'}catch(e){}
+  if(asked)return;
+  try{localStorage.setItem('poof-notif-asked','1')}catch(e){}
+  $('#layer').innerHTML='<div class="scrim" data-act="scrim"><div class="sheet"><h3>Never miss a call</h3><p>Turn on notifications so your phone rings when a friend calls or messages you, even when Poof is closed.</p><div class="row2"><button class="btn ghost" data-act="scrim">Not now</button><button class="btn" data-act="enablePushSheet">Turn on</button></div></div></div>';
+}
+function installApp(){
+  if(!deferredInstall)return;
+  deferredInstall.prompt();
+  deferredInstall.userChoice.then(function(){deferredInstall=null;listScreen()});
+}
+function enablePush(){
+  if(!pushSupported())return toast('This browser does not support notifications.');
+  Notification.requestPermission().then(function(p){
+    if(p!=='granted'){listScreen();return toast('Notifications were not allowed.')}
+    syncPush(true);
+  });
+}
+function syncPush(announce){
+  if(!pushSupported()||!me||Notification.permission!=='granted')return;
+  navigator.serviceWorker.ready.then(function(reg){
+    return reg.pushManager.getSubscription().then(function(sub){
+      return sub||reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToU8(VAPID_PUBLIC)});
+    });
+  }).then(function(sub){
+    var j=sub.toJSON();
+    return sb.from('push_subscriptions').upsert({endpoint:j.endpoint,p256dh:j.keys.p256dh,auth:j.keys.auth,user_id:me.id},{onConflict:'endpoint'});
+  }).then(function(r){
+    if(r&&r.error){toast('Could not save notification settings yet.');return}
+    pushOn=true;if(announce)toast('Notifications are on');
+    if(!openId&&!call)listScreen();
+  }).catch(function(){toast('Could not turn on notifications.')});
+}
+function forgetPush(){
+  if(isNative()){
+    var tk='';try{tk=window.PoofNative.getToken()}catch(e){}
+    return tk?Promise.resolve(sb.from('push_subscriptions').delete().eq('endpoint','fcm:'+tk)).catch(function(){}):Promise.resolve();
+  }
+  if(!pushSupported())return Promise.resolve();
+  return navigator.serviceWorker.ready.then(function(reg){return reg.pushManager.getSubscription()}).then(function(sub){
+    if(sub)return sb.from('push_subscriptions').delete().eq('endpoint',sub.endpoint);
+  }).catch(function(){});
+}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
+
+/* ---------- events ---------- */
+var ACT={
+  pickPhoto:pickPhoto,camPhoto:function(){$('#layer').innerHTML='';$('#fileCam').click()},galPhoto:function(){$('#layer').innerHTML='';$('#fileGal').click()},
+  sendPhoto:sendPhoto,openSnap:openSnap,closeSnap:closeSnap,openImg:openImg,
+  mode:function(id){authMode=id;authScreen('')},
+  submitAuth:submitAuth,
+  saveName:function(id){
+    var u=cleanUser($('#u2').value);
+    if(!validUser(u)){return usernameScreen(id,'Username must be 3 to 20 letters, numbers or underscores.')}
+    createProfile(id,u);
+  },
+  reloadApp:function(){location.reload()},
+  freshStart:function(){try{Object.keys(localStorage).forEach(function(k){if(/^sb-/.test(k))localStorage.removeItem(k)})}catch(e){}authMode='login';authScreen('')},
+  enablePushSheet:function(){$('#layer').innerHTML='';enablePush()},
+  installApp:installApp,enablePush:enablePush,hideBanner:function(){bannerHidden=true;listScreen()},
+  call:startCall,callAccept:acceptCall,callDecline:declineCall,callEnd:function(){hangUp()},
+  callMute:function(){call.muted=!call.muted;call.local.getAudioTracks().forEach(function(t){t.enabled=!call.muted});drawCall()},
+  callCam:function(){call.camOn=!call.camOn;call.local.getVideoTracks().forEach(function(t){t.enabled=call.camOn});drawCall()},
+  callFlip:flipCamera,
+  openChat:openChat,closeChat:closeChat,send:sendMsg,
+  newChat:newChat,startChat:startChat,
+  timerSheet:timerSheet,setTimer:setTimer,
+  scrim:function(){$('#layer').innerHTML=''},
+  signOut:function(){
+    if(call)hangUp();
+    if(channel){sb.removeChannel(channel);channel=null}
+    if(sigCh){sb.removeChannel(sigCh);sigCh=null}
+    forgetPush().then(function(){return sb.auth.signOut()}).then(function(){pushOn=false;me=null;convos={};openId=null;$('#chat').hidden=true;authMode='login';authScreen('')});
+  }
+};
+document.addEventListener('click',function(e){
+  var el=e.target.closest('[data-act]');if(!el)return;
+  var a=el.dataset.act;
+  if(a==='scrim'&&e.target!==el)return;
+  if(ACT[a])ACT[a](el.dataset.id,el,e);
+});
+document.addEventListener('input',function(e){
+  if(e.target.id==='q'){clearTimeout(searchT);searchT=setTimeout(doSearch,300)}
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    if(e.target.id==='mi'){e.preventDefault();sendMsg()}
+    else if(e.target.id==='u'||e.target.id==='p'){e.preventDefault();submitAuth()}
+  }
+  if(e.key==='Escape'&&$('#layer').firstChild)$('#layer').innerHTML='';
+});
+function syncMessages(){
+  if(!me)return;
+  sb.from('messages').select('*').or('sender_id.eq.'+me.id+',recipient_id.eq.'+me.id).order('created_at',{ascending:false}).limit(200).then(function(r){
+    var rows=(r.data||[]).reverse(),need={};
+    rows.forEach(function(m){var o=m.sender_id===me.id?m.recipient_id:m.sender_id;if(!profileCache[o])need[o]=1});
+    var ids=Object.keys(need);
+    var p=ids.length?sb.from('profiles').select('*').in('id',ids):Promise.resolve({data:[]});
+    p.then(function(pr){
+      (pr.data||[]).forEach(function(x){profileCache[x.id]=x});
+      rows.forEach(function(m){addMsg(m)});
+      if(openId){markSeen(openId);renderMsgs(false)}else if(!call)listScreen();
+    });
+  });
+}
+['fileCam','fileGal'].forEach(function(i){var el=document.getElementById(i);if(el)el.addEventListener('change',function(e){var f=e.target.files[0];e.target.value='';picked(f)})});
+document.addEventListener('visibilitychange',function(){
+  if(document.hidden&&snap)closeSnap();
+  if(document.hidden||!me)return;
+  if(openId)markSeen(openId);
+  syncMessages();pickupSignals();
+});
+
+/* ---------- boot ---------- */
+setTimeout(function(){if(!me&&!$('.auth'))bootProblem('Poof is taking longer than usual to start.')},9000);
+sb.auth.getSession().then(function(r){
+  if(r.data&&r.data.session)afterAuth();else authScreen('');
+}).catch(function(){authScreen('')});
+})();
+</script>
+</body>
+</html>
